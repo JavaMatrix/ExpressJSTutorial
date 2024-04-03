@@ -1,4 +1,4 @@
-const asyncHandler(asyncHandler = require("express-async-handler");
+const asyncHandler = require("express-async-handler");
 
 //@desc Get all contacts
 //@route GET /api/contacts
@@ -41,4 +41,4 @@ const deleteContact = asyncHandler(async (req, res) => {
     res.status(200).json({message: `Page to delete ${req.params.id}, using router.`});
 });
 
-module.exports = {getContact, createContact, getIndividualContact, updateContact, deleteContact});
+module.exports = {getContact, createContact, getIndividualContact, updateContact, deleteContact};
