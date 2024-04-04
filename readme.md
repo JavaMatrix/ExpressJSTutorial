@@ -6,8 +6,8 @@ Edited to my discretion for code style and grammar.
 Finished tutorial on 2023-04-04 01:49.
 
 # Todo:
-[] Add a frontend (React?)
-[] Add features
-    [] Email authentication
-    [] More fields on contacts?
-[] Deploy somewhere for funsies
+- [ ] Add a frontend (React?)
+- [ ] Add features
+    - [ ] Email authentication
+    - [ ] More fields on contacts?
+- [ ] Deploy somewhere for funsies
