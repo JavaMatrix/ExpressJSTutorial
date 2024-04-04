@@ -6,7 +6,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 //@route GET /api/contacts
 //@access public
 const getContact = asyncHandler(async (req, res) => {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({ user_id: req.user.id });
     res.status(200).json(contacts);
 });
 
@@ -14,9 +14,10 @@ const getContact = asyncHandler(async (req, res) => {
 //@route POST /api/contacts
 //@access public
 const createContact = asyncHandler(async (req, res) => {
+    const { name, email, phone } = req.body;
     let contact = {};
     try {
-        contact = await Contact.create(req.body);
+        contact = await Contact.create({ user_id: req.user.id, name, email, phone });
     } catch (e) {
         res.status(400);
         throw e;
@@ -42,6 +43,11 @@ const getIndividualContact = asyncHandler(async (req, res) => {
         throw new Error("Contact not found.");
     }
 
+    if (contact.user_id.toString() !== req.user.id) {
+        res.status(404);
+        throw new Error("Contact not found.");
+    }
+
     res.status(200).json(contact);
 });
 
@@ -49,6 +55,8 @@ const getIndividualContact = asyncHandler(async (req, res) => {
 //@route PUT /api/contacts/:id
 //@access public
 const updateContact = asyncHandler(async (req, res) => {
+    const { name, email, phone } = req.body;
+
     if (!ObjectId.isValid(req.params.id)) {
         res.status(404);
         throw new Error("Contact not found.");
@@ -61,9 +69,14 @@ const updateContact = asyncHandler(async (req, res) => {
         throw new Error("Contact not found.");
     }
 
+    if (contact.user_id.toString() !== req.user.id) {
+        res.status(404);
+        throw new Error("Contact not found.");
+    }
+
     const updatedContact = await Contact.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        { user_id: req.user.id, name, email, phone },
         { new: true }
     );
 
@@ -82,6 +95,11 @@ const deleteContact = asyncHandler(async (req, res) => {
     const contact = await Contact.findById(req.params.id);
 
     if (!contact) {
+        res.status(404);
+        throw new Error("Contact not found.");
+    }
+
+    if (contact.user_id.toString() !== req.user.id) {
         res.status(404);
         throw new Error("Contact not found.");
     }
